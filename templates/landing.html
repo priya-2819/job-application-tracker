@@ -1,0 +1,108 @@
+<!-- templates/landing.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civora Nexus Careers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* Animated Gradient Background */
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(-45deg, #3b82f6, #6366f1, #06b6d4, #60a5fa);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            color: white;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            animation: fadeInDown 1.2s ease forwards;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        .btn-main {
+            background: #fff;
+            color: #2563eb;
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            transition: transform 0.3s ease, background 0.3s ease;
+            font-weight: 600;
+        }
+        .btn-main:hover {
+            background: #f1f5f9;
+            transform: scale(1.05);
+        }
+
+        /* Floating animated circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 10s linear infinite;
+        }
+        .circle.small { width: 60px; height: 60px; bottom: 10%; left: 15%; animation-duration: 12s; }
+        .circle.medium { width: 120px; height: 120px; top: 20%; right: 10%; animation-duration: 15s; }
+        .circle.large { width: 200px; height: 200px; bottom: 5%; right: 20%; animation-duration: 20s; }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(-30px); opacity: 0.7; }
+            100% { transform: translateY(0); opacity: 0.4; }
+        }
+
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="hero">
+        <h1>🚀 Launch Your Career with Civora Nexus</h1>
+        <p>Find your dream job, apply effortlessly, and track your progress in real-time.</p>
+        <a href="{% url 'job_list' %}" class="btn btn-main">Browse Jobs</a>
+
+        <!-- Floating circles -->
+        <div class="circle small"></div>
+        <div class="circle medium"></div>
+        <div class="circle large"></div>
+    </div>
+</body>
+</html>

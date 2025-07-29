@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Application | Civora Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f2f5, #e3f2fd);
+            font-family: 'Poppins';
+            padding: 40px;
+        }
+        .status-box {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .progress-bar-container {
+            position: relative;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            margin: 20px 0 40px 0;
+        }
+        .progress-fill {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        .stage {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 30px;
+        }
+        .circle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            line-height: 36px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .pending { background: #6c757d; }
+        .applied { background: #0d6efd; }
+        .reviewed { background: #ffc107; color: #212529; }
+        .interview { background: #6610f2; }
+        .offered { background: #28a745; }
+        .rejected { background: #dc3545; }
+
+        .active {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <style>
+    .track-form-box {
+        max-width: 500px;
+        margin: 30px auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease-in-out;
+    }
+    .track-form-box:hover {
+        transform: scale(1.02);
+    }
+    .track-form-box input {
+        border-radius: 8px;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+    }
+    .track-form-box button {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        position: relative;
+    }
+    /* Spinner */
+    .spinner-border {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-left: 8px;
+        display: none;
+    }
+    .loading .spinner-border {
+        display: inline-block;
+    }
+</style>
+
+    <div class="track-form-box text-center" data-aos="fade-up">
+        <h4 class="mb-3 text-primary fw-bold">🔍 Track Your Job Application</h4>
+        <form method="POST" class="d-flex flex-column align-items-center gap-3" onsubmit="showLoading()">
+            {% csrf_token %}
+            <input type="email" name="email" class="form-control" placeholder="Enter your email to track" required>
+            <button type="submit" class="btn btn-primary w-50" id="checkBtn">
+                Check Status 
+                <div class="spinner-border spinner-border-sm text-light" role="status"></div>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('checkBtn').classList.add('loading');
+        }
+    </script>
+
+
+    <div class="status-box" data-aos="fade-up">
+        <h3 class="text-primary text-center fw-bold">📌 Tracking Application for {{ application.job.title }} </h3>
+        <p class="text-center text-muted">Candidate: {{ application.name }} | Status: {{ application.get_status_display }}
+        </p>
+
+        <!-- Animated Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <!-- Dynamic Stages -->
+        {% for stage in stages %}
+            <div class="stage {% if forloop.counter0 == current_stage %}active{% endif %}" data-aos="fade-right" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+                <div class="circle {{ stage }}">{{ forloop.counter }}</div>
+                <div class="fw-bold">{{ stage|capfirst }}</div>
+                <p class="text-muted">
+                    {% if stage == 'pending' %}Your application is yet to be submitted.{% endif %}
+                    {% if stage == 'applied' %}Your application has been submitted successfully.{% endif %}
+                    {% if stage == 'reviewed' %}Our HR team is reviewing your application.{% endif %}
+                    {% if stage == 'interview' %}You have been shortlisted for interview.{% endif %}
+                    {% if stage == 'offered' %}Congratulations! You got the offer.{% endif %}
+                    {% if stage == 'rejected' %}Unfortunately, this time you were not selected.{% endif %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800 });
+
+        // Animate progress bar
+        let progress = document.getElementById("progress");
+        let currentStage = {{ current_stage }};
+        let totalStages = {{ stages|length }};
+        let percentage = ((currentStage + 1) / totalStages) * 100;
+        setTimeout(() => {
+            progress.style.width = percentage + "%";
+        }, 300);
+    </script>
+</body>
+</html>
