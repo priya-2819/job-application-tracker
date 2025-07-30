@@ -1,1 +1,0 @@
-# job-application-tracker
